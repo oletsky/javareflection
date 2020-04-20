@@ -34,14 +34,27 @@ public class DynamicLoader {
 
 class FactoryMethod {
     public static Object getInstance() {
-        final String PAK_NAME ="";
+        final String PAK_NAME ="javatraining.oletsky.reflection.";
         Scanner scan=new Scanner(System.in);
         System.out.println("Enter the name of needed class");
-        String clName=PAK_NAME+scan.nextLine();
+        String clName=scan.nextLine();
 
         switch(clName) {
-            case "K1": return new K1();
-            case "K2": return new K2();
+            case "K1":
+            case "K2":
+                try {
+                    String fullName=PAK_NAME+clName;
+                    Class c = Class.forName(fullName);
+                    return c.getDeclaredConstructor().newInstance();
+                } catch (ClassNotFoundException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             default: throw new RuntimeException("No suitable class found");
         }
     }
